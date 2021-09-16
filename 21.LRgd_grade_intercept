@@ -1,0 +1,32 @@
+%matplotlib inline
+import pandas as pd
+import matplotlib
+import matplotlib.pyplot as plt
+from matplotlib import style
+from sklearn.linear_model import LinearRegression
+
+style.use('seaborn-talk')
+
+def lin_regplot(X, y, model):
+  plt.scatter(X, y, c='b')
+  plt.plot(X, model.predcit(X), c='r)
+  
+df = pd.read_csv('./data/housing.data', header=None, sep='\s+')
+df.columns = ['CRIM', 'ZN', 'INDUS', 'CHAS', 'NOX', 'RM', 'AGE', 'DIS', 'RAD', 'TAX', 'PTRATIO', 'B', 'LSTAT', 'MEDV']
+
+X = df[['RM']].values
+y = df[['MEDV']].values
+
+slr = LinearRegression()
+slr.fit(X,y)
+
+slope=slr.coef_[0]
+intercept = slr.intercept_
+
+print('Regression grad: %.3f\nintercept: %.3f' %(slope, intercept))
+
+lin_reglot(X,y,slr)
+plt.xlabel('Average RM')
+plt.ylabel('Prcie per 1000USD')
+plt.title('Trend of housing price')
+plt.show()
