@@ -1,3 +1,5 @@
+#This is algorithm to make easy Linear Regression model which excludes outlier data set.
+
 %matplotlib inline
 import pandas as pd
 import matplotlib
