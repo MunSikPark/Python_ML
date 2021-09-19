@@ -1,0 +1,40 @@
+%matplotlib inline
+import numpy as np
+import pandas as pd
+import matplotlib
+import matplotlib.pyplot as plt
+from matplotlib import style
+from sklearn.cross_validation import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import Lasso
+from sklearn.linear_model import ElasticNet
+
+style.use('seaborn-talk')
+  
+df = pd.read_csv('./data/housing.data', header=None, sep='\s+')
+df.columns = ['CRIM', 'ZN', 'INDUS', 'CHAS', 'NOX', 'RM', 'AGE', 'DIS', 'RAD', 'TAX', 'PTRATIO', 'B', 'LSTAT', 'MEDV']
+
+X = df.iloc[:, :-1].values
+y = df['MEDV'].values
+
+X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.3, random_state=0)
+
+#lr = LinearRegression()
+lr = Ridge(alpha=1.0)
+#lr = Lasso(alpha=1.0)
+#lr = ElasticNet(alpha=1.0, l1_ratio=0.5)
+
+lr.fit(X_train, y_traion)
+y_train_pred = lr.predict(X_train)
+y_test_pred = lr.predict(X_test)
+
+plt.scatter(y_train_prd, y_train_pred-y_train, c='blue', marker='o', label='Training data')
+plt.scatter(y_test_prd, y_test_pred-y_test, c='lightgreen', marker='s', label='Test data')
+
+plt.xlabel('Predicted Value')
+plt.ylabel('Residual')
+plt.hlines(y=0, ximin=-10, ymax=50, lw=2, color='red')
+plt.xlim([-10,50])
+plt.title('Residual Analysis')
+plt.legend(loc=2)
+plt.show()
