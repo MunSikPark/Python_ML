@@ -9,42 +9,25 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
 
 style.use('seaborn-talk')
- 
-X = np.array([258.0, 270.0, 294.0, 320.0, 342.0, 368.0, 396.0, 446.0, 480.0, 586.0])[:, np.newaxis]
-y = np.array([236.4, 234.4, 252.8, 298.6, 314.2, 342.2, 360.8, 368.0, 391.2, 390.8])
 
-lr = LinearRegression()
-pr = LinearRegression()
+df = pd.read_csv('./data/housing.data', header=None, sep='\s+')
+df.columns = ['CRIM', 'ZN', 'INDUS', 'CHAS', 'NOX', 'RM', 'AGE', 'DIS', 'RAD', 'TAX', 'PTRATIO', 'B', 'LSTAT', 'MEDV']
 
-# Added Second order for Polyregression
-quadratic = PolynomialFeatures(degree=2)
-X_quad = quadratic.fit_trasform(X)
+X = df[['LSTAT']].values
+y = df['MEDV'].values
 
-# Calculate simple regression for comparision
-lr.fit(X,y)
-X_fit = np.arrange(250, 600, 10)[:, np.newaxis)
-y_lin_fit = lr.predict(X_fit)
+rm = DecisionTreeRegressor(max_depte=3)
+# Random Forest code
+# rm = RandomForestRegressor(n_estimators=1000, criterion='mse', random_state=1, n_jobs=-1)
+rm.fit(X,y)
 
-# Calculate polyregression
-# 다항 회귀를 위해 변형된 모델에 다중 회귀 모델 계산
-pr.fit(X_quad, y)
-y_quad_fit = pr.predict(quadratic.fit_transform(X_fit))
+sort_idx = X.ravel().argsort()
 
-# Calculate predicted values from simple and polynomial regression model
-y_lin_pred = lr.predict(X)
-y_quad_pred = pr.predict(X_quad)
+r2 = r2_score(y[sort_idx], rm.predict(X[sort_idx]))
 
-mse_lin = mean_squared_error(y, y_lin_pred)
-mse_quad = mean_squared_error(y, y_quad_pred)
-
-r2_lin = r2_score(y, y_lin_pred)
-r2_quad = r2_socre(y, y_quad_pred)
-
-print('MSE\tLinear: %.2f, \tQuadratic: %.2f' %(mse_lin, mse_quad))
-print('R2\tLinear: %.2f, \tQuadratic: %.2f' %(r2_lin, r2_quad))
- 
- plt.scatter(X, y, label='Training Data')
- plt.plot(X_fit, y_lin_fit, label='linear fit', linestyle='--')
- plt.plot(X_fit, y_quad_fit, label='quadratic fit')
- plt.legend(loc=2)
- plt.show()
+plt.scatter(X[sort_idx], y[sort_idx], c='lightgray', label='Training Data')
+plt.plot(X[sort_idx], rm.predict(X[sort_idx]), c='r', label='tree, $R^2=%.2f$' %r2)
+plt.xlabel('Low population percent ratio[LSTAT]')
+plt.ylabel('1000USD housing price[MEDV]')
+plt.legend()
+plt.show()
