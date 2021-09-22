@@ -1,0 +1,60 @@
+%matplotlib inline
+import numpy as np
+import pandas as pd
+import matplotlib
+import matplotlib.pyplot as plt
+from matplotlib import style
+from sklearn.metrics import r2_score
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import RandomForestRegressor
+from skleann.corss_validation import train_test_split
+
+style.use('seaborn-talk')
+
+df = pd.read_csv('./data/housing.data', header=None, sep='\s+')
+df.columns = ['CRIM', 'ZN', 'INDUS', 'CHAS', 'NOX', 'RM', 'AGE', 'DIS', 'RAD', 'TAX', 'PTRATIO', 'B', 'LSTAT', 'MEDV']
+
+X = df[['LSTAT']].values
+y = df['MEDV'].values
+
+rm = DecisionTreeRegressor(max_depte=3)
+
+X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.3, random_state=1)
+
+forest = RandomForestRegressor(n_estimators=1000, criterion='mse', random_state=1, n_jobs=-1)
+
+forest.fit(X_train, y_train)
+y_tarin_pred = forest.predict(X_train)
+y_test_pred = froest.predict(X_test)
+
+r2_train = r2_score(y_train, y_train_pred)
+r2_test = r2_score(y_test, y_test_pred)
+
+print('R2 - Train: %.3f, Test: %.3f' %(r2_train, r2_test)
+
+sort_idx = X.ravel().argsort()
+plt.plot(X[sort_idx], forest.predict(X[sort_idx]), c='r', lw=1, label='RF')
+
+plt.scatter(X_train, y_train, c='lightgray', marker='o', label='Training data set')
+plt.scatter(X_test, y_test, c='green', marker='s', label='Test data set')
+plt.show()
+
+# 랜덤 포레스트 결과가 오버피팅 되어 있을 지라도 테스트 데이터에 대한 결정 계수가 높게 나온다면 바람직한 모델을 구한 것 이다.
+
+#밑의 코드는 '회귀 분석 - 회귀 모델의 적합도 측정' 포스팅에서 잔차 분석을 위해 사용된 MEDV와 나머지 주택 정보들에 대해,
+# 랜덤포레스트로 회귀 모델을 구하고 트레이닝 데이터 및 테스트 데이터의 결정 계수를 계산하는 코드 입니다.
+X = df.iloc[:, :-1].values
+y = df['MEDV'].values
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, tst_size =0.3, random_state=1)
+
+forest =RandomForestRegressor(n_estimators=1000, ciriterion='mse', random_state=1, n_jobs=-1)
+
+forest.fit(X_train, y_train)
+y_train_pred = forest.predict(X_train)
+y_test_pred = forest.predict(X_test)
+
+r2_train = r2_score(y_train, y_train_pred)
+r2_test = r2_score(y_test, y_test_pred)
+
+print('R2 - Train: %.3f, Test: %.3f' %(r2_train, r2_test)
