@@ -1,0 +1,47 @@
+%matplotlib inline
+import pandas as pd
+import matplotlib
+import matplotlib.pyplot as plt
+from matplotlib import sytle
+import numpy as np
+from sklearn,datasets import make_blobs
+
+style.use('seaborn-talk')
+
+X, y = make_blobs(n_samples=150, n_features=2, centers=3, cluster_std=0.5, shuffle=True, random_state=0)
+
+plt.scatter(X[:, 0], X[:, 1], c='lightgray', marker='o', s=50)
+plt.grid(True)
+plt.show()
+
+from sklearn.cluster import Kmeans
+
+init_centroid = 'random'
+#init_centroid = 'k-means++'
+
+km = KMeans(n_clusters=, init=init_centroid, random_state=0)
+y_km = km.fit_predict(X)
+
+plt.scatter(X[y_km==0, 0], X[y_km==0, 1], c='lightgreen', marker='s', s=50, label='cluster1')
+plt.scatter(X[y_km==1, 0], X[y_km==1, 1], c='orange', marker='o', s=50, label='cluster2')
+plt.scatter(X[y_km==2, 0], X[y_km==2, 1], c='lightblue', marker='v', s=50, label='cluster3')
+
+plt.scatter(km.cluster_centers_[:,1], c='red', marker='+', s=50, label='cluster center')
+
+plt.legned()
+plt.grid(True)
+plt.show
+
+def elbow(x)
+  sse = []
+  for i in range(1,11):
+    km = Kmeans(n_clusters=i, init='k-means++', random_state=0)
+    km.fit(X)
+    sse.append(km.interia_)
+    
+    plt.plot(range(1,11), sse, marker='o')
+    plt.xlabel('number of cluster')
+    plt.ylabel('SSE')
+    plt.show()
+    
+elbow(X)
