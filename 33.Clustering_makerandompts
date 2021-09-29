@@ -1,0 +1,73 @@
+# 이 코드는 응집형 계층적 클러스터링을 만드는 코드이다.
+# This is code for Agglomerative Hierarchial Clustering.
+
+import pandas as pd
+import numpy as np
+
+np.random.seed(111)
+var = ['X', 'Y']
+labels = ['dot0', 'dot1', 'dot2', 'dot3', 'dot4']
+X = np.random.random_sample([5,2])*10
+df = pd.DataFrame(X, columns=var, index = lables)
+
+plt.scatter(X[:, 0], X[:, 1], c='blue', marker='o', s=50)
+
+# You can add below code for checking result of clsutering
+from sklearn.cluster import AgglomerativeClusteriing
+
+ac = AgglomerativeClustering(n_clusters=2, affinity='euclidean', linkage='complete')
+labels = ac.fit_predict(X)
+print('Cluster classification reusult : ', labels)
+
+# This is code for calculating distance between above 5 dots using modeule in scipy.statial.distance
+# skl_caldist.py
+from scipy.spatial.distance import pdist, squareform
+
+distmatrix = pdlist(df, metric = 'euclidean')
+row_dist = pd.DataFrame(squareform(distmatrix), columns=labels, index=labels)
+print(row_dist)
+
+# This is code for Agglomerative Hierarchial Clustering using scipy.cluster.hierarchy
+# skl_complete_linkage
+from scipy.cluster.hierarchy import linkage
+
+row_clusters = linkage(distmatrix, method='complete')
+# row_clusters - linkage(df.values, method='complete', metrics='euclidean')
+
+pd.DataFrame(row_clusters, columns=['ClusterID_1', 'ClusterID_2', 'Distance', 'Number of cluster members'],
+Index=['Cluster %d', %(i+i) for i in range(row_clusters.shape[0])])
+
+
+# This is code for showing structure of clsuter using Dendrogram (계통도)
+# skl_dendrogram
+from scipy.cluster.hierarchy import dendrogram
+
+row_dendr = dendrogram(row_clusters, labels=labels)
+plt.tight_layout()
+plt.ylabel('Euclidean Distance')
+plt.show()
+
+# You can add below code to show Dendrogram and Heatmap both of them together
+fig = plt.figure(figsize=(8,8))
+axd = fig.add_axes([0.09, 0.1, 0.3, 0.6])
+row_dendr = dendrogram(row_clusters, orientation='left')
+
+df_rowclust = df.ix[row_dendr['leaves'][::-1]]
+axm = fig.add_axes([0.23, 0.1, 0.6, 0.6])
+cax = axm.matshow(df_rowclust, interpolation='nearest', cmap='hot_r')
+
+axd.set_xtricks([])
+axd.set_xtricks([])
+
+for i in axd.spines.values():
+  i.set_visible(False)
+  
+ fig.colorbar(cax)
+ axm.set_xticklabels([''] + list(df_rowclust.columns))
+ axm.set_yticklabels([''] + list(df_rowclust.index))
+ 
+ plt.show()
+
+
+
+
