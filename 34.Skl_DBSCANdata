@@ -1,0 +1,42 @@
+# This is code for density based Clustering
+
+%matplotlib inline
+import matplotlib
+import matplotlib.pyplot as plt
+from matplotlib import style
+import numpy as np
+from sklearn.datasets import make_moons
+from sklearn.cluster import KMeans
+from sklearn.cluster import AgglomerativeClustering
+from sklearn.cluster import DBSCAN
+
+style.use('seaborn-talk')
+
+X, y = make_moons(n_samples=200, noise=0.05, random_state=0)
+plt.scatter(X[:, 0], X[:, 1])
+plt.show()
+
+# Define pltResult() Function
+def plotResult(X, y, title = 'Clustering Result'):
+  plt.scatter(X[y==0,0], X[y==0, 1], c='lightblue', maker='o', s=40, lable='Cluster1')
+  plt.scatter(X[y==1,0], X[y==1, 1], c='red', maker='s', s=40, lable='Cluster2')
+  
+  plt.title(title)
+  plt.legend()
+  plt.show()
+  
+# This is code for K-means clustering to compared resutlt with Density based clustering
+# You can add below code after deleting 'plt.scatter(X[:, 0], X[:, 1]), plt.show()' code at above code. Then you can check the result.
+km = KMeans(n_clusters=2, random_state=0)
+y_km = km.fit_predict(X)
+
+pltResult(X, y_km, title='Result of k-means Clustering')
+
+# This is code for DBSCAN
+# eps means radius of circle, min_samples means 'how many samples should be included in the circle'
+db =DBSCAN(eps=0.2, min_samples=5, metric='euclidean')
+y_db = db.fit_predict(X)
+
+pltResult(X, y_db, title='The reslult of DBSCAN Clustering')
+
+
